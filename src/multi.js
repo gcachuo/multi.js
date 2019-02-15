@@ -5,18 +5,18 @@
  * Author: Fabian Lindfors
  * License: MIT
  */
-var multi = (function() {
+var multi = (function () {
     var disabled_limit = false // This will prevent to reset the "disabled" because of the limit at every click
 
     // Helper function to trigger an event on an element
-    var trigger_event = function(type, el) {
+    var trigger_event = function (type, el) {
         var e = document.createEvent("HTMLEvents");
         e.initEvent(type, false, true);
         el.dispatchEvent(e);
     };
 
     // Toggles the target option on the select
-    var toggle_option = function(select, element, settings) {
+    var toggle_option = function (select, element, settings) {
         var option = select.options[element.getAttribute("multi-index")];
 
         if (option.disabled) {
@@ -72,7 +72,7 @@ var multi = (function() {
     };
 
     // Refreshes an already constructed multi.js instance
-    var refresh_select = function(select, settings) {
+    var refresh_select = function (select, settings) {
 
         // Clear columns
         select.wrapper.selected.innerHTML = "";
@@ -165,7 +165,7 @@ var multi = (function() {
 
 
     // Intializes and constructs an multi.js instance
-    var init = function(select, settings) {
+    var init = function (select, settings) {
 
         /**
          * Set up settings (optional parameter) and its default values
@@ -211,7 +211,7 @@ var multi = (function() {
             search.type = "text";
             search.setAttribute("placeholder", settings.search_placeholder);
 
-            search.addEventListener("input", function() {
+            search.addEventListener("input", function () {
                 refresh_select(select, settings);
             });
 
@@ -229,8 +229,8 @@ var multi = (function() {
 
 
         // Add click handler to toggle the selected status
-        wrapper.addEventListener("click", function(event) {
-            var element=event.target.closest('a');
+        wrapper.addEventListener("click", function (event) {
+            var element = event.target.closest('a') || event.target;
             if (element.getAttribute("multi-index")) {
                 toggle_option(select, element, settings);
             }
@@ -238,8 +238,8 @@ var multi = (function() {
 
 
         // Add keyboard handler to toggle the selected status
-        wrapper.addEventListener("keypress", function(event) {
-            var element=event.target.closest('a');
+        wrapper.addEventListener("keypress", function (event) {
+            var element = event.target.closest('a') || event.target;
             var is_action_key = event.keyCode === 32 || event.keyCode === 13;
             var is_option = element.getAttribute("multi-index");
 
@@ -272,7 +272,7 @@ var multi = (function() {
         refresh_select(select, settings);
 
         // Refresh selector when select values change
-        select.addEventListener("change", function() {
+        select.addEventListener("change", function () {
             refresh_select(select, settings);
         });
     };
@@ -284,13 +284,13 @@ var multi = (function() {
 
 // Add jQuery wrapper if jQuery is present
 if (typeof jQuery !== "undefined") {
-    (function($) {
+    (function ($) {
 
-        $.fn.multi = function(settings) {
+        $.fn.multi = function (settings) {
 
             settings = typeof settings !== "undefined" ? settings : {};
 
-            return this.each(function() {
+            return this.each(function () {
                 var $select = $(this);
 
                 multi($select.get(0), settings);
