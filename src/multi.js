@@ -16,8 +16,8 @@ var multi = (function() {
     };
 
     // Toggles the target option on the select
-    var toggle_option = function(select, event, settings) {
-        var option = select.options[event.target.getAttribute("multi-index")];
+    var toggle_option = function(select, element, settings) {
+        var option = select.options[element.getAttribute("multi-index")];
 
         if (option.disabled) {
             return;
@@ -230,21 +230,23 @@ var multi = (function() {
 
         // Add click handler to toggle the selected status
         wrapper.addEventListener("click", function(event) {
-            if (event.target.getAttribute("multi-index")) {
-                toggle_option(select, event, settings);
+            var element=event.target.closest('a');
+            if (element.getAttribute("multi-index")) {
+                toggle_option(select, element, settings);
             }
         });
 
 
         // Add keyboard handler to toggle the selected status
         wrapper.addEventListener("keypress", function(event) {
+            var element=event.target.closest('a');
             var is_action_key = event.keyCode === 32 || event.keyCode === 13;
-            var is_option = event.target.getAttribute("multi-index");
+            var is_option = element.getAttribute("multi-index");
 
             if (is_option && is_action_key) {
                 // Prevent the default action to stop scrolling when space is pressed
                 event.preventDefault();
-                toggle_option(select, event, settings);
+                toggle_option(select, element, settings);
             }
         });
 
