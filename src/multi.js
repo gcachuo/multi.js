@@ -6,7 +6,7 @@
  * License: MIT
  */
 var multi = (function () {
-    var disabled_limit = false // This will prevent to reset the "disabled" because of the limit at every click
+    var disabled_limit = false; // This will prevent to reset the "disabled" because of the limit at every click
 
     // Helper function to trigger an event on an element
     var trigger_event = function (type, el) {
@@ -15,7 +15,7 @@ var multi = (function () {
         el.dispatchEvent(e);
     };
 
-    var validate_limit = function (select, settings) {
+    var validate_limit = function (select, settings, trigger_limit = false) {
         // Check if there is a limit and if is reached
         var limit = settings.limit;
         if (limit > -1) {
@@ -31,8 +31,8 @@ var multi = (function () {
             if (selected_count === limit) {
                 this.disabled_limit = true;
 
-                // Trigger the function (if there is)
-                if (typeof settings.limit_reached === 'function') {
+                // Trigger the function (if there is) and only when trigger_limit is true
+                if (typeof settings.limit_reached === 'function' && trigger_limit) {
                     settings.limit_reached();
                 }
 
@@ -69,7 +69,7 @@ var multi = (function () {
 
         option.selected = !option.selected;
 
-        validate_limit(select, settings);
+        validate_limit(select, settings, true);
 
         trigger_event("change", select);
     };
@@ -105,7 +105,7 @@ var multi = (function () {
         var item_group = null;
         var current_optgroup = null;
 
-        validate_limit(select, settings);
+        validate_limit(select, settings, false);
 
         // Loop over select options and add to the non-selected and selected columns
         for (var i = 0; i < select.options.length; i++) {
