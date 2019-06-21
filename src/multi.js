@@ -15,22 +15,12 @@ var multi = (function () {
         el.dispatchEvent(e);
     };
 
-    // Toggles the target option on the select
-    var toggle_option = function (select, element, settings) {
-        var option = select.options[element.getAttribute("multi-index")];
-
-        if (option.disabled) {
-            return;
-        }
-
-        option.selected = !option.selected;
-
-
+    var validate_limit = function (select, settings) {
         // Check if there is a limit and if is reached
         var limit = settings.limit;
         if (limit > -1) {
             // Count current selected
-            var selected_count = 0
+            var selected_count = 0;
             for (var i = 0; i < select.options.length; i++) {
                 if (select.options[i].selected) {
                     selected_count++;
@@ -39,7 +29,7 @@ var multi = (function () {
 
             // Reached the limit
             if (selected_count === limit) {
-                this.disabled_limit = true
+                this.disabled_limit = true;
 
                 // Trigger the function (if there is)
                 if (typeof settings.limit_reached === 'function') {
@@ -67,6 +57,19 @@ var multi = (function () {
                 this.disabled_limit = false
             }
         }
+    };
+
+    // Toggles the target option on the select
+    var toggle_option = function (select, element, settings) {
+        var option = select.options[element.getAttribute("multi-index")];
+
+        if (option.disabled) {
+            return;
+        }
+
+        option.selected = !option.selected;
+
+        validate_limit(select, settings);
 
         trigger_event("change", select);
     };
@@ -101,6 +104,8 @@ var multi = (function () {
         // Current group
         var item_group = null;
         var current_optgroup = null;
+
+        validate_limit(select, settings);
 
         // Loop over select options and add to the non-selected and selected columns
         for (var i = 0; i < select.options.length; i++) {
@@ -160,7 +165,6 @@ var multi = (function () {
                 }
             }
         }
-
     };
 
 
